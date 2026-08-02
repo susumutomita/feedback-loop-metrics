@@ -1,6 +1,7 @@
 import sonarjs from "eslint-plugin-sonarjs";
 import tseslint from "typescript-eslint";
 
+// Apply typed rules only to source roots represented by the root project.
 export default tseslint.config(
   {
     ignores: [

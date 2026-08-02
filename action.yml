@@ -1,0 +1,111 @@
+name: Feedback Loop Metrics
+description: Measure feedback lead time, target hit rate, loop closure, and repeat feedback from GitHub Issues.
+author: Susumu Tomita
+
+inputs:
+  github-token:
+    description: GitHub token used to read issues and issue timeline events.
+    required: false
+    default: ${{ github.token }}
+  repository:
+    description: Repository in owner/name format.
+    required: false
+    default: ${{ github.repository }}
+  labels:
+    description: Comma-separated labels selecting feedback issues. Empty means all issues.
+    required: false
+    default: feedback
+  label-match:
+    description: Match selected labels using any or all.
+    required: false
+    default: any
+  exclude-labels:
+    description: Comma-separated labels excluded from every metric.
+    required: false
+    default: duplicate,invalid,spam
+  non-delivery-labels:
+    description: Labels kept in denominators but not counted as delivered.
+    required: false
+    default: wontfix,not-planned,declined
+  completion-mode:
+    description: closed uses issue closed_at; label uses the first completion-label event.
+    required: false
+    default: closed
+  completion-label:
+    description: Label representing a production shipment in label mode.
+    required: false
+    default: shipped
+  lookback-days:
+    description: Number of days included in the report.
+    required: false
+    default: '90'
+  target-hours:
+    description: Lead-time target for the target hit rate.
+    required: false
+    default: '24'
+  repeat-window-days:
+    description: Window in which a second item counts as repeat feedback.
+    required: false
+    default: '30'
+  include-bots:
+    description: Include bot-created issues.
+    required: false
+    default: 'false'
+  locale:
+    description: Report language, en or ja.
+    required: false
+    default: en
+  output-path:
+    description: JSON report path. Empty disables JSON output.
+    required: false
+    default: feedback-loop-metrics.json
+  markdown-output-path:
+    description: Markdown report path. Empty disables Markdown output.
+    required: false
+    default: feedback-loop-metrics.md
+  api-url:
+    description: GitHub REST API base URL.
+    required: false
+    default: ${{ github.api_url }}
+  api-version:
+    description: GitHub REST API version.
+    required: false
+    default: '2026-03-10'
+  fail-on-empty:
+    description: Fail when no matching feedback issues are found.
+    required: false
+    default: 'false'
+
+outputs:
+  feedback-count:
+    description: Number of analyzed feedback issues.
+  completed-count:
+    description: Number of issues with a completion timestamp.
+  p50-hours:
+    description: Median feedback lead time in hours.
+  p90-hours:
+    description: P90 feedback lead time in hours.
+  target-hit-rate:
+    description: Percentage of eligible feedback completed within target-hours.
+  loop-closure-rate:
+    description: Percentage of feedback issues that are closed.
+  repeat-feedback-rate:
+    description: Percentage of eligible authors who submitted another feedback item.
+  target-met-repeat-feedback-rate:
+    description: Repeat rate for authors whose first feedback met the target.
+  target-missed-repeat-feedback-rate:
+    description: Repeat rate for authors whose first feedback missed the target.
+  repeat-feedback-rate-difference:
+    description: Percentage-point difference between target-met and target-missed cohorts.
+  json-path:
+    description: Path to the generated JSON report.
+  markdown-path:
+    description: Path to the generated Markdown report.
+
+runs:
+  using: node24
+  main: dist/index.js
+
+branding:
+  icon: repeat
+  color: blue

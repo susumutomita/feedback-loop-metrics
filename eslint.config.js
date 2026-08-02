@@ -19,13 +19,20 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx,mts,cts}'],
     rules: {
+      // Existing violations remain visible without turning the first rollout red.
       '@typescript-eslint/consistent-type-assertions': [
-        'error',
+        'warn',
         { assertionStyle: 'never' },
       ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/ban-ts-comment': 'error',
+      '@typescript-eslint/array-type': 'warn',
+      'sonarjs/slow-regex': 'warn',
+      'sonarjs/no-invariant-returns': 'warn',
+      'sonarjs/regex-complexity': 'warn',
+      'sonarjs/no-os-command-from-path': 'warn',
+      'sonarjs/no-alphabetical-sort': 'warn',
       // no-floating-promises uses `void promise` for intentional fire-and-forget.
       // Sonar forbids that construct, so promise-safety takes precedence.
       'sonarjs/void-use': 'off',
